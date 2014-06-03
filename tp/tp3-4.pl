@@ -72,14 +72,6 @@ satisfait(W, # P ) :-
 
 satisfait(W, P -->> Q) :-
      satisfait(W, # (P => Q)).
-
-% tp4 : 
-satisfait(W, << A >> F) :-
-	monde(W),
-	rel(W, W2), % \E un monde W2
-	est_entrepeunable(A, W), % les conditions de A sont satisfaites dans W
-	est_effective(A, W2), % les effets de A sont effectifs dans W2
-	satisfait(W2, F). % F est satisfait dans W2
 	
 % je ne sais pas que P est vrai mais je connais quelqu'un qui sait que P est vrai
 %donc P est "possible"
@@ -87,12 +79,29 @@ satisfait(W, <> P) :-
 	monde(W),
         un_rel_satisfait(W, P). %     rel(W, M)
 
+% tp4 : 
+satisfait(W, << A >> F) :-
+	monde(W),
+	rel(W, W2), % \E un monde W2
+	est_entrepenable(A, W), % les conditions de A sont satisfaites dans W
+	est_effective(A, W2), % les effets de A sont effectifs dans W2
+	satisfait(W2, F). % F est satisfait dans W2
+
 % les conditions de A sont satisfaites dans W
 est_entrepeunable(A, W) :-
 	monde(W),
 	action(A, Cond, Suppr, Ajout),
 	list2conj(Cond, P),
 	satisfait(W, P).
+
+% les effets de A sont effectives dans W
+est_effective(A, W) :-
+	monde(W),
+	action(A, Cond, Suppr, Ajout),
+        list2conj(Suppr, SU),
+	list2conj(Ajout, AJ),
+	satisfait(W, non (SU)),
+	satisfait(W, AJ).
 
 %transforme une liste en conjonction des éléments de la liste
 list2conj([A], A).
@@ -123,3 +132,5 @@ un_rel_satisfait(W, P) :-
 
 un_satisfait([M | LM], P) :-
      (satisfait(M, P) -> true; un_satisfait(LM, P)).
+
+%
