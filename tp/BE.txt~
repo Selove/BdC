@@ -1,0 +1,98 @@
+A.
+
+	1. [p] = ~<p>~ donc 
+	|= [p]X <=> |= ~ (<p>(~X))
+		<=> |= ~ (p ou ~X) <=> ~(X => p)
+		<=> |= ~p et X
+
+	2. Montrons que  <p>^n  =  <p><p>...<p>  = <p> et [p]^n  =  [p][p]...[p]  =  [p]
+
+	Montrons cela par récurrence.
+	Pour n=1, c'est évidemment vrai.
+	Supposons la propriété vraie au rang n=k
+	\A X \in F, on a
+	|= <p>^k+1 X <=> |= <p>(<p>^k X)
+		     <=> |= <p>(<p>X)
+		     <=> |= p ou (<p>X)
+		     <=> |= p ou (p ou X)
+		     <=> |= p ou X
+		     <=> |= <p>X
+
+	de même pour [p]
+	|= [p]^k+1 X <=> |= [p]([p]^k X)
+		     <=> |= [p]([p]X)
+		     <=> |= ~p et (<p>X)
+		     <=> |= ~p et (~p et X)
+		     <=> |= ~p et X
+		     <=> |= [p]X
+
+
+	Montrons que toute séquence de modalités Modi ∈{<p>, [p]} préfixant une formule X quelconque, telle que Mod1 Mod2 … Modn X, est une formule équivalente à Mod1 X.
+Autrement dit :  Mod1 Mod2 … Modn  ≡  Mod1   pour toute modalité Modi ∈{<p>, [p]}
+	
+	Cela revient à dire que la première modalité "absorbe les autres", il faut donc montrer que <p>[p] = <p> et [p]<p> = [p]
+	\A X \in F, on a
+	|= <p>[p]X <=> |= <p>(~p et X)
+		   <=> |= p ou (~p et X)
+		   <=> |= (p ou ~p) et (p ou X)
+		   <=> |= Vrai et (p ou X)
+		   <=> |= p ou X
+		   <=> |= <p>X 
+	et
+	|= [p]<p>X <=> |= [p](p ou X)
+		   <=> |= ~p et (p ou X)
+		   <=> |= (~p et p) ou (~p et X)
+		   <=> |= Faux ou (~p et X)
+		   <=> |= ~p et X
+		   <=> |= [p]X
+	Avec les propriétés <p>^n = <p> et [p]^n = [p], Cela montre bien que la première modalité "absorbe" les suivantes pour Modi ∈{<p>, [p]}.
+
+	3. S5 = {epsilon, <>, []} Union {~, ~<>, ~[]}
+
+	On a Sigma5 = {epsilon, <p>, [p]} Union {~, ~<p>, ~[p]}, en effet on a <p><p> = <p>, [p][p] =[p], <p>[p]=<p>, [p]<p>=[p], ~<p> = [p]~ et finalement ~[p] = <p>~, le reste des compositions étant trivial.
+	Il y a donc une certaine ressemblance entre Sigma5 et S5. Mais Sigma5 est-il équivalent à S5? Pour savoir cela, il suffit de voir si les théorèmes caractéristiques de S5 sont aussi vérifiés dans Sigma5.
+
+	Les théorèmes vérifiés par S5 sont :
+	\A P,Q \in F
+	(K): [](P => Q) => ([]P => []Q)
+	(T): []P => P
+	(B): P => []<>P
+	(4): []P => [][]P
+	(E): <>P => []<>P
+
+	Essayons de les vérifier dans Sigma5
+
+	(K): \A P,Q \in F, on a :
+	[p](P => Q) => ([p]P => [p]Q) <=> [p](~P ou Q) => ((~p et P) => (~p et Q))
+				      <=> (~p et (~P ou Q)) => ((p ou P) ou (~p et Q))
+				      <=> (p ou (P et ~Q)) ou ((p ou P) ou (~p et Q))
+				      <=> p ou p ou P ou (P et ~Q) ou (~p et Q)
+				      <=> p ou (~p et Q) ou P ou (P et ~Q)
+				      <=> (p et Q) ou P ou (P et ~Q)
+	or (p et Q) ou P ou (P et ~Q) est une proposition fausse si P et Q sont tous les deux faux, il n'y a donc pas tautologie, K n'est pas vérifié dans Sigma5.
+	Sigma5 n'est donc pas S5.
+
+	4. Comme on a montré a la question précédente, S5 et Sigma5 ont le même nombre de modalités, on a S5 = {epsilon, <>, []} Union {~, ~<>, ~[]} et Sigma5 = {epsilon, <p>, [p]} Union {~, ~<p>, ~[p]}.
+
+	On a comme rêgles:
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= <p>X ssi |= p ou X
+
+	|= [p]X ssi |= ~p et X
+
+	|= ~X ssi |= ~X
+	
+	|= ~<p>X ssi |= [p]~X 
+		 ssi |= ~p et ~X
+
+	|= ~[p]X ssi |= <p>~X 
+		 ssi |= p ou ~X
+
+B.
+
+	5. 
+	
+
+	
