@@ -25,7 +25,7 @@ m(w6,[q,r]).
 m(w7,[p,q,r]).
 
 %		satisfait
-satisfait(P,W) :-
+satisfait(W, P) :-
      proposition(P),
      monde(W),
      m(W,L),
@@ -33,7 +33,7 @@ satisfait(P,W) :-
 
 
 %et
-satisfait(P et Q,W) :-
+satisfait(W, P et Q) :-
      monde(W),
      satisfait(P,W),
      satisfait(Q,W).
@@ -44,35 +44,35 @@ satisfait(non P, W) :-
      not(member(W, LW)).
 %p est satisfait par un élément de la liste
 list_w_satisfait(P, LW) :-
-     findall(W,satisfait(P,W), LW).
+     findall(W,satisfait(W, P), LW).
 %ou
-satisfait(P ou Q,W) :-
-     satisfait( non(non P et non Q), W).
+satisfait(W,P ou Q) :-
+     satisfait(W, non(non P et non Q)).
 
 
 %implication
-satisfait(P => Q,W) :-
-     satisfait( non (P et non Q), W).
+satisfait(W, P => Q) :-
+     satisfait(W, non (P et non Q)).
 %equivalence
-satisfait(P <=> Q,W) :-
-     satisfait(P => Q, W),
-     satisfait(Q => P, W).
+satisfait(W, P <=> Q) :-
+     satisfait(W, P => Q),
+     satisfait(W, Q => P).
 %implication stricte
-satisfait(P -->> Q,W) :-
-     satisfait(#(P => Q),W).
+satisfait(W, P -->> Q) :-
+     satisfait(W, #(P => Q)).
 
 
 %si une de mes relations sait que p est vrai alors p est possible.
-satisfait(<> P,W) :-
+satisfait(W, <> P) :-
      monde(W),
-     un_rel_satisfait(P,W).
+     un_rel_satisfait(W,P).
 %une des relations de W satisfait P
-un_rel_satisfait(P,W) :-
+un_rel_satisfait(W, P) :-
      bagof(M, rel(W,M), LM),
-     un_satisfait(P, LM).
+     un_satisfait(LM, P).
 %un des éléments de la liste satisfait p
-un_satisfait(P, [M | LM]) :-
-     (satisfait(P,M) -> true; un_satisfait(P, LM)).
+un_satisfait([M | LM], P) :-
+     (satisfait(M,P) -> true; un_satisfait(LM, P)).
 
 %def de rel (on choisit une relation transitive)
 rel(W1, W2) :-
@@ -83,8 +83,8 @@ rel(W1, W2) :-
      inclusion(L1, L2).
 
 %necessaire
-satisfait(# P,W) :-
-     satisfait(non(<>(non P)),W).
+satisfait(W, # P) :-
+     satisfait(W,non(<>(non P))).
 
 
 %THEOREME : p doit être satisfait dans tous les mondes

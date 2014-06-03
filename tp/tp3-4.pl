@@ -79,13 +79,29 @@ satisfait(W, <> P) :-
 	monde(W),
         un_rel_satisfait(W, P). %     rel(W, M)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % tp4 : 
-satisfait(W, << A >> F) :-
+satisfait(W, << [A] >> F, [W2]) :-
 	monde(W),
 	rel(W, W2), % \E un monde W2
 	est_entrepenable(A, W), % les conditions de A sont satisfaites dans W
 	est_effective(A, W2), % les effets de A sont effectifs dans W2
 	satisfait(W2, F). % F est satisfait dans W2
+
+satisfait(W, <<[A|LA]>> F, [W2|R]) :-
+	monde(W),
+	rel(W, W2), % \E un monde W2
+	est_entrepenable(A, W), % les conditions de A sont satisfaites dans W
+	est_effective(A, W2), % les effets de A sont effectifs dans W2
+	satisfait(W2, <<LA>> F, [R]). % F est satisfait dans W2
+
+%generation de plan
+genere(W,F,[A], [W2],1):-
+    satisfait(W, << [A] >> F, [W2]).
+
+genere(W,F,[ACT|PLAN], [W2|R], M):-
+    M > 1, satisfait(W, << [ACT] >> FI,[W2]), N is M-1, between(1,N,P), genere(W2,F,PLAN,R,P).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % les conditions de A sont satisfaites dans W
 est_entrepeunable(A, W) :-
