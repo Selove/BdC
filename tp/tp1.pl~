@@ -1,8 +1,0 @@
-%univers initial
-init(E) :- E=[lieu(robot)=a, lieu(boite)=b].
-
-%but
-but(B) :- B=[lieu(robot)=b].
-
-action(aller(X,Y), [lieu(robot) = X], [lieu(robot) = X], [lieu(robot) = Y]) :-
-    member(X,[a,b]), member(Y,[a,b]), X \= Y.
