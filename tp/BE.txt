@@ -265,5 +265,14 @@ C.
 	
 	Sigma4.2 = Sigma5.2 
 	car <~Vrai> == [~Vrai] == espilon
-	Sigma4.1 vérifie donc KT4 tout comme Sigma4
+	Sigma4.2 vérifie donc KT4 tout comme Sigma4
 
+
+
+	3. E3
+	Sigma5.3 correspond à Sigma4 avec p=Vrai
+	donc, 
+	Sigma5.3 == Sigma4.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>}
+	
+	Sigma5.3 vérifie donc KT4
+	
