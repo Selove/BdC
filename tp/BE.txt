@@ -64,40 +64,43 @@ Autrement dit :  Mod1 Mod2 … Modn  ≡  Mod1   pour toute modalité Modi ∈{<
 	Essayons de les vérifier dans Sigma5
 
 	\A P,Q \in F, on a :
-	(K):
-	[p](P => Q) => ([p]P => [p]Q) <=> [p](~P ou Q) => ((~p et P) => (~p et Q))
-				      <=> (~p et (~P ou Q)) => ((p ou ~P) ou (~p et Q))
-				      <=> (p ou (P et ~Q)) ou ((p ou ~P) ou (~p et Q))
-				      <=> p ou p ou ~P ou (P et ~Q) ou (~p et Q)
-				      <=> p ou (~p et Q) ou ~P ou (P et ~Q)
-				      <=> ((p ou ~p) et (p ou Q)) ou ((~P ou P) et (~P et Q))
-				      <=> Vrai
+	(K): [p](P => Q) => ([p]P => [p]Q)
+	 <=> [p](~P ou Q) => ((~p et P) => (~p et Q))
+	 <=> (~p et (~P ou Q)) => ((p ou ~P) ou (~p et Q))
+	 <=> (p ou (P et ~Q)) ou ((p ou ~P) ou (~p et Q))
+	 <=> p ou p ou ~P ou (P et ~Q) ou (~p et Q)
+	 <=> p ou (~p et Q) ou ~P ou (P et ~Q)
+	 <=> ((p ou ~p) et (p ou Q)) ou ((~P ou P) et (~P et Q))
+	 <=> Vrai
 	K est vérifié dans Sigma5.
 
-	(T): 
-	[p]P => P <=> (~p et P) => P
-		 <=> ~(~p et P) ou P
-		 <=> p ou ~P ou P
- 		 <=> Vrai
+	(T): [p]P => P 
+	<=> (~p et P) => P
+	<=> ~(~p et P) ou P
+	<=> p ou ~P ou P
+ 	<=> Vrai
 	T est vérifié dans Sigma5
 	
-	(4): 
-	[p]P => [p][p]P <=> [p]P => [p]P
+	(4): [p]P => [p][p]P 
+	<=> [p]P => [p]P
+	<=> Vrai
 	4 est vérifié dans Sigma5.
 
-	(B): 
-	P => [p]<p>P <=> P => [p]P
-		     <=> ~P ou (~p et P)
-		     <=> (~P ou ~p) et (~P ou P)
-		     <=> ~P ou ~p
+	(B): P => [p]<p>P 
+	<=> P => [p]P
+	<=> ~P ou (~p et P)
+	<=> (~P ou ~p) et (~P ou P)
+	<=> ~P ou ~p
 	Proposition fausse si p et P sont vrais donc B n'est pas vérifié dans Sigma5.
 
-	(E):
-	<p>P => [p]<p>P <=> <p>P => [p]P
-			<=> (p ou P) => (~p et P)
-			<=> ~(p ou P) ou (~p et P)
-			<=> (~p et ~P) ou (~p et P)
+	(E): <p>P => [p]<p>P
+	<=> <p>P => [p]P
+	<=> (p ou P) => (~p et P)
+	<=> ~(p ou P) ou (~p et P)
+	<=> (~p et ~P) ou (~p et P)
         Proposition fausse si p est faux donc E n'est pas vérifié dans Sigma5.
+
+	Sigma5 vérifie donc KT4
 
 	4. Comme on a montré a la question précédente, S5 et Sigma5 ont le même nombre de modalités, on a S5 = {epsilon, <>, []} Union {~, ~<>, ~[]} et Sigma5 = {epsilon, <p>, [p]} Union {~, ~<p>, ~[p]}.
 
@@ -132,6 +135,144 @@ B.
 	[phi](P => Q) => ([phi]P => [phi]Q) <=> Vrai, la démonstration se passe comme avec Sigma5. K est vérifié dans Sigma4
 	De même T et 4 sont vérifiés dans Sigma4.
 	
-	
+	6.
+	S4 = { espilon, [], <>, []<>, <>[], []<>[], <>[]<>} Union { ~, ~[], ~<>, ~[]<>, ~<>[], ~[]<>[], ~<>[]<>}
+	Sigma4 a aussi 14 modalités distinctes :
+	Sigma4 = { espilon, <~p>, <p>, [~p], [p] } Union { ~, ~<~p>, ~<p>, ~[~p], ~[p] }
+	On a comme règles:
+	\A X \in F
+	|= epsilon X ssi |= X
 
+	|= <p>X ssi |= p ou X
+	
+	|= <~p>X ssi |= ~p ou X
+
+	|= [p]X ssi |= ~p et X
+
+	|= [~p]X ssi |= p et X
+
+	|= ~X ssi |= ~X
+	
+	|= ~<p>X ssi |= ~p et ~X
+
+	|= ~<~p>X ssi |= p et ~X
+
+	|= ~[p]X ssi |= p ou ~X
+
+	|= ~[~p]X ssi |= ~p ou ~X
+
+	On a de plus les propriétés suivantes :
+	
+	1) \A n >= 0, (<p><~p>)^n == (<~p><p>)^n == espilon
+	
+	2) Pour toute modalité Mod, 
+	\A X
+	\A n>=0, ([p][~p])^n(Mod X) == ([~p][p])^n(Mod X) |= Faux
+
+	D'où, 
+	2-a) <p>[p][~p] X |=  p
+	2-b) ~<p>[p][~p] X |=  p
+
+	
+C.
+
+	1- E1
+	Sigma5.1 = {epsilon, <Faux>, [Faux]} Union {~, ~<Faux>, ~[Faux]}.
+	
+	On a comme règles:
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= <Faux>X ssi |= Faux ou X |= X (identité)
+
+	|= [Faux]X ssi |= Vrai et X |= X (identité)
+
+	|= ~X ssi |= ~X
+	
+	|= ~<Faux>X ssi |= Vrai et ~X |= ~X (négation)
+
+	|= ~[Faux]X ssi |= Faux ou ~X |= ~X (négation)
+	
+	Ainsi Sigma5.1 se réduit à {epsilon, ~} soit 2 modalités distintes définies par 
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= ~X ssi |= ~X
+
+	
+	Sigma5.1 vérifie donc KT4 tout comme Sigma5
+	De plus
+	(B): P => [p]<p>P 
+	<=> ~P ou ~p
+	<=> ~P ou Vrai (dans E1 car p = Faux)
+	<=> Vrai
+	Sigma5.1 vérifie donc B
+
+	(E): <p>P => [p]<p>P
+	<=> (~p et ~P) ou (~p et P)
+	<=> (Vrai et ~P) ou (Vrai et P)   (dans E1 car p = Faux)
+        <=> ~P ou P
+	<=> Vrai
+	Sigma5.1 verifie donc E
+	
+	Ainsi Sigma5.1 vérifie donc KT4BE comme S5
+
+	
+	Sigma4.1 = { espilon, <~Faux>} Union { ~, ~<~Faux> } soit 4 propriétés distinctes définies par :
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= <~Faux>X ssi |= <Vrai>X  |= Vrai ou X |= Vrai (même si X vaut Faux donc)
+
+	|= ~X ssi |= ~X
+	
+	|= ~<~Faux>X ssi |= ~<Vrai>X |= Faux et ~X |= Faux (même si X vaut Vrai donc)
+	
+	Sigma4.1 vérifie donc KT4 tout comme Sigma4
+
+
+
+	2- E2
+	Sigma5.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>} soit 4 modalités distinctes
+	
+	On a comme règles:
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= <Vrai>X ssi |= Vrai ou X |= Vrai
+
+	|= ~X ssi |= ~X
+	
+	|= ~<Vrai>X ssi |= Faux et ~X |= Faux
+
+	
+	Sigma5.2 vérifie donc KT4 tout comme Sigma5
+	De plus
+	(B): P => [p]<p>P 
+	<=> ~P ou ~p
+	<=> ~P ou Faux (dans E2 car p = Vrai)
+	<=> ~P
+	Pas nécessairement vrai donc Sigma5.2 ne vérifie pas B
+
+	(E): <p>P => [p]<p>P
+	<=> (~p et ~P) ou (~p et P)
+	<=> (Faux et ~P) ou (Faux et P)   (dans E1 car p = Faux)
+        <=> Faux
+	Sigma5.2 ne verifie donc pas E
+	
+	Ainsi Sigma5.2 vérifie KT4 comme Sigma5
+
+	
+	Sigma4.2 = Sigma5.2 
+	car <~Vrai> == [~Vrai] == espilon
+	Sigma4.2 vérifie donc KT4 tout comme Sigma4
+
+
+
+	3. E3
+	Sigma5.3 correspond à Sigma4 avec p=Vrai
+	donc, 
+	Sigma5.3 == Sigma4.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>}
+	
+	Sigma5.3 vérifie donc KT4
 	
