@@ -229,3 +229,41 @@ C.
 	|= ~<~Faux>X ssi |= ~<Vrai>X |= Faux et ~X |= Faux (même si X vaut Vrai donc)
 	
 	Sigma4.1 vérifie donc KT4 tout comme Sigma4
+
+
+
+	2- E2
+	Sigma5.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>} soit 4 modalités distinctes
+	
+	On a comme règles:
+	\A X \in F
+	|= epsilon X ssi |= X
+
+	|= <Vrai>X ssi |= Vrai ou X |= Vrai
+
+	|= ~X ssi |= ~X
+	
+	|= ~<Vrai>X ssi |= Faux et ~X |= Faux
+
+	
+	Sigma5.2 vérifie donc KT4 tout comme Sigma5
+	De plus
+	(B): P => [p]<p>P 
+	<=> ~P ou ~p
+	<=> ~P ou Faux (dans E2 car p = Vrai)
+	<=> ~P
+	Pas nécessairement vrai donc Sigma5.2 ne vérifie pas B
+
+	(E): <p>P => [p]<p>P
+	<=> (~p et ~P) ou (~p et P)
+	<=> (Faux et ~P) ou (Faux et P)   (dans E1 car p = Faux)
+        <=> Faux
+	Sigma5.2 ne verifie donc pas E
+	
+	Ainsi Sigma5.2 vérifie KT4 comme Sigma5
+
+	
+	Sigma4.2 = Sigma5.2 
+	car <~Vrai> == [~Vrai] == espilon
+	Sigma4.1 vérifie donc KT4 tout comme Sigma4
+
