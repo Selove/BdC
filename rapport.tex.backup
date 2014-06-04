@@ -1,0 +1,99 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\lstset{
+language=Prolog,
+frame=single,
+}
+
+
+\usepackage[dvips]{hyperref}
+
+\title{Rapport \\ Bases de Connaissances}
+\author{Selove OKE CODJO \\ Solène EHOLIE}
+\date{04/06/2014}
+
+\begin{document}
+
+ \maketitle
+ \newpage
+ \tableofcontents
+ \newpage
+ \section{Introduction}
+ 
+ 
+ \section{Rendu des programmes r\'{e}alis\'{e}s en TP}
+ 
+  \subsection{TP1 : generation de plan}
+  
+  Le but du TP1 était de prendre en main la programmation en prolog \`{a} travers un problème simple mettant en scène un agent et un objet. L'agent
+  est capable de se d\'{e}placer d'un point a \`{a} un point b, de prendre l'objet et de le poser. Il va donc falloir g\'{e}n\'{e}rer le plan \`{a}
+  suivre par l'agent pour aller d'une certaine situation \`{a} une autre
+  
+  
+   \subsubsection{R\'{e}solution du probl\`{e}me}
+  La premi\`{e}re chose \`{a} faire \'{e}tait de d\'{e}finir les diff\'{e}rentes actions dont notre agent est capable.
+  Une action \'{e}tant d\'{e}finie par une specification, une liste de conditions n\'{e}cessaire \`{a} son accomplissement, une liste de propri\'{e}t\'{e}s qui ne seront
+  plus vraies et une liste de nouvelles propri\'{e}t\'{e}s.
+  
+  Ainsi, on d\'{e}finit l'action aller demandant \`{a} un robot de se deplacer d'un point X \`{a} un point Y. il faut donc que le robot soit en X,
+  propri\'{e}t\'{e} qui deviendra fausse apr\`{e}s le déplacement o\`{u} il se retrouve en Y. La d\'{e}finition est donn\'{e}e ci-dessous.
+  \begin{lstlisting}
+   action(aller(robot,X,Y), 
+          [lieu(robot) = X], 
+          [lieu(robot) = X], [lieu(robot) = Y]) :-
+	      member(X,[a,b]), member(Y,[a,b]), X \= Y.
+  \end{lstlisting}
+  Ensuite on d\'{e}finit prendre, il faut que le robot et la boite soient au m\^{e}me endroit et que la main du robot soit libre, bien s\^{u}r
+  la main n'est plus libre apr\`{e} l'action et l'objet n'est plus \`{a} l'endroit o\`{u} il \'{e}tait mais dans la main du robot.
+  \begin{lstlisting}
+   action(prendre(robot,O), 
+          [lieu(robot) = L, lieu(O) = L, libre(main(robot))], 
+          [libre(main(robot)), lieu(O)=L], 
+          [lieu(O)=main(robot)]) :-
+	      member(L,[a,b]), member(O,[boite]).
+  \end{lstlisting}
+  Enfin, on d\'{e}finit poser, l'objet doit \^{e}tre dans la main du robot avant de la quitter et se retrouver \`{a} la m\^{e}me position que le robot.
+  \begin{lstlisting}
+   action(poser(robot,O), 
+          [lieu(robot) = L, lieu(O) = main(robot)], 
+          [lieu(O)=main(robot)], 
+          [lieu(O) = L, libre(main(robot))]) :- 
+	      member(L, [a,b]), member(O, [boite]).
+  \end{lstlisting}
+
+  
+  
+   \subsubsection{Tests}
+   
+  \subsection{TP2 : planification multi-agents}
+  
+   \subsubsection{R\'{e}solution du probl\`{e}me}
+   \subsubsection{Tests}
+   
+  \subsection{TP3 : g\'{e}n\'{e}rateur-d\'{e}monstrateur en logique modale}
+  
+   \subsubsection{R\'{e}solution du probl\`{e}me}
+   \subsubsection{Tests}
+   
+  \subsection{TP4 : g\'{e}n\'{e}rateur de plan en logique modale}
+  
+   \subsubsection{R\'{e}solution du probl\`{e}me}
+   \subsubsection{Tests}
+   
+   
+ \section{Travaux r\'{e}alis\'{e}s lors du bureau d'\'{e}tude}
+ 
+  \subsection{Etude de Lm\{p\} }
+  
+  \subsection{Etude de Lm\{E0\}}
+  
+  \subsection{Etude d'autres logiques}
+  
+ \section{Conclusion}
+    
+\end{document}
