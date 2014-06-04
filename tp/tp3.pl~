@@ -91,7 +91,7 @@ satisfait(# P,W) :-
 theoreme(P) :-
      list_w_satisfait(P, LW),
      findall(W,monde(W), ALLW),
-     (egal(LW, ALLW) -> true).
+     egal(LW, ALLW).
 
 egal(LW, ALLW) :-
      inclusion(LW, ALLW),
