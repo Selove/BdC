@@ -35,7 +35,8 @@ genere(EI,EF,[ACT|PLAN],M):-
     M > 1, transition(ACT,EI,E), N is M-1, between(1,N,P), genere(E,EF,PLAN,P).
 
 %planification
-planifier(Plan) :-
+%situation du TP
+planifier(Plan, T) :-
     init(E),
     but(B),
     nl,
@@ -43,4 +44,18 @@ planifier(Plan) :-
     read(Prof),
     nl,
     genere(E,F,Plan,Prof),
-    verifcond(B,F).
+    verifcond(B,F),
+    cputime(T).
+
+%planification
+%situation du TP
+planifier(Plan, T, Init, But) :-
+    nl,
+    write(' Profondeur limite : '),
+    read(Prof),
+    nl,
+    genere(E,F,Plan,Prof),
+    verifcond(B,F),
+    cputime(T).
+
+

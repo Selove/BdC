@@ -18,9 +18,15 @@ init2(EI) :- EI = [position(robo1) = b, position(robo3) = c, position(robo2) = b
 		libre(main(robo1)), libre(main(robo2)), libre(main(robo3)), 
 		sur(cube1,table(c)), sur(cube2,table(b))].
 
+initInv(EI) :- EI = [position(robo1) = b, position(robo2) = b, 
+		position(cube1) = b, position(cube2) = b, 
+		accessible(cube1), 
+		libre(main(robo1)), libre(main(robo2)),
+		sur(cube1,cube2), sur(cube2,table(b))].
 %buts
 	%cube1 sur cube2 sur table c et robo1 en c 
 but(BUT):- BUT = [position(robo1) = c, position(cube1) = c, position(cube2) = c, 
+		position(robo2) = b, position(robot3)= c,
 		accessible(cube1), 
 		sur(cube1,cube2), sur(cube2,table(c))].
 	%cube2 sur cube1 sur table b 
@@ -35,7 +41,11 @@ but2(BUT) :- BUT = [position(robo1) = c, position(robo3) = c, position(robo2) = 
 		accessible(cube1), 
 		libre(main(robo1)), libre(main(robo2)), libre(main(robo3)), 
 		sur(cube1,cube2), sur(cube2,table(c))].
-
+butInv(B) :- EI = [position(robo1) = b, position(robo2) = b, 
+		position(cube1) = b, position(cube2) = b, 
+		accessible(cube2), 
+		libre(main(robo1)), libre(main(robo2)),
+		sur(cube2,cube1), sur(cube1,table(b))].
 %actions
 action( aller_a_vide(R,Ld,La),
 	[position(R) = Ld, libre(main(R))],
@@ -94,8 +104,8 @@ genere(E,F,[A],1):-
 genere(EI,EF,[ACT|PLAN],M):-
     M > 1, transition(ACT,EI,E), N is M-1, between(1,N,P), genere(E,EF,PLAN,P).
 
-%planification
-planifier(Plan) :-
+%planification pour le cas du TP
+planifier(Plan, Temps) :-
     init(E),
     but(B),
     nl,
@@ -103,4 +113,18 @@ planifier(Plan) :-
     read(Prof),
     nl,
     genere(E,F,Plan,Prof),
-    verifcond(B,F).
+    verifcond(B,F),
+    cputime(Temps).
+
+%planification parametree
+%inverser la pile en restant sur la meme table avec uniquement robo1 et robo2
+planifierInverser(Plan, Temps) :-
+    initInv(E),
+    butInv(B),
+    nl,
+    write(' Profondeur limite : '),
+    read(Prof),
+    nl,
+    genere(E,F,Plan,Prof),
+    verifcond(B,F),
+    cputime(Temps).
