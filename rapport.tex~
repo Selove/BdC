@@ -115,13 +115,82 @@ frame=single,
    \subsubsection{Tests}
    
   \subsection{TP2 : planification multi-agents}
-  
+ L'objectif ici \'{e}tait de faire de la planification comme au TP1 à la seule différence qu'il y a ici plusieurs agents différents.
+ Ce qui offre un nombre de situations plus \'{e}lev\'{e} et des cas plus complexes \`{a} traiter.
+ 
    \subsubsection{R\'{e}solution du probl\`{e}me}
+   La diff\'{e}rence principale avec le TP1 r\'{e}side dans la d\'{e}finition des actions. On a plusieurs agents qui ont des capacit\'{e}s diff\'{e}rentes, il faudra donc
+   sp\'{e}cifier les agents capables d'effectuer telle ou telle autre action. De plus, concernant les lieux, un objet peut se retrouver dans la 'main' de tel ou tel autre agent,
+   il faut donc un moyen de distinguer les 'mains'. Les objets peuvent aussi \^{e}tre empil\'{e}s les uns sur les autres. La d\'{e}finition des action est donc un peu plus complexe
+   comme nous allons le voir dans ce qui suit.
+   
+   La premi\`{e}re action d\'{e}finie est $aller\_a\_vide(R,Ld,La)$. C'est la possibilit\'{e} pour un agent de se d\'{e}placer de la position Ld vers la position La sans 
+   transporter d'objet, ce qui constitue la seule diff\'{e}rence avec l'action aller du TP1. Seul le robot1 sait le faire.
+   \begin{lstlisting}
+   action( aller_a_vide(R,Ld,La),
+	[position(R) = Ld, libre(main(R))],
+	[position(R) = Ld],
+	[position(R) = La] ) :-
+	member(Ld,[a,b,c]), member(La,[a,b,c]), member(R,[robo1]), Ld \= La.
+   \end{lstlisting}
+   Ensuite il fallait d\'{e}finir $transporter(R,Ld,La,O)$ qui permet \`{a} un agent R d'aller de la position Ld \`{a} la position La en transportant l'objet O.
+   Il faut donc que l'agent et l'objet soient en Ld et qu'il tienne l'objet O. Apr\`{e}s, ils se retrouvent tout les deux en La. Le code est donn\'{e} dans l'encadré ci-dessous.
+   \begin{lstlisting}
+   action( transporter(R,Ld,La,O),
+	[position(R) = Ld, position(O) = Ld, lieu(O) = main(R)],
+	[position(R) = Ld, position(O) = Ld],
+	[position(R) = La, position(O) = La] ) :-
+	member(Ld,[a,b,c]), member(La,[a,b,c]), member(R,[robo1]), 
+	member(O,[cube1,cube2]), Ld \= La.
+   \end{lstlisting}
+   L'action $attraper(R,O,L)$ d\'{e}crit le fait, pour un agent R, de prendre un objetO sur la table de la position L. Il faut que l'objet soit accessible, c'est \`{a} dire qu'il n'y ait pas d'objet au dessus,
+   l'objet n'est donc plus sur la table, n'est plus accessible et la main du robot n'est plus libre. L'objet se trouve maintenant dans la main du robot R.
+   Elle peut \^{e}tre ex\'{e}cut\'{e}e par les trois robots.
+   \begin{lstlisting}
+   action( attraper(R,O,L),
+	[position(R) = L, position(O) = L, sur(O,table(L)), 
+	accessible(O), libre(main(R))],
+	[sur(O,table(L)), accessible(O), libre(main(R))],
+	[lieu(O) = main(R)] ) :-
+	member(L,[a,b,c]), member(R,[robo1, robo2, robo3]), member(O,[cube1,cube2]).
+   \end{lstlisting}
+   L'action $saisir(R,O,L)$ permet \`{a} un robot R de prendre un objet O qui se trouve en haut d'une pile et au m\^{e}me lieu L que le robot.
+   La main du robot doit être libre et l'objet doit se trouver sur un autre Osous. Bien s\^{u}, apr\`{e}s l'action, O ne se trouve plus sur Osous,
+   il n'est plus accessible et la main du robot n'est plus libre. O est maintenant dans la main de R, et l'objet qui \'{e}tait en dessous est d\'{e}sormais accessible.
+   Seuls les robots 2 et 3 peuvent le faire.
+   \begin{lstlisting}
+   action( saisir(R,O,L),
+	[position(R) = L, position(O) = L, sur(O,Osous), 
+	accessible(O), libre(main(R))],
+	[sur(O,Osous), accessible(O), libre(main(R))],
+	[lieu(O) = main(R), accessible(Osous)] ) :-
+	member(L,[a,b,c]), member(R,[robo2, robo3]), 
+	member(O,[cube1,cube2]), member(Osous,[cube1,cube2]), O \= Osous.
+   \end{lstlisting}
+   Les actions $deposer(R,O,L)$ et $empiler(R,Osur,Osous,L)$ sont les actions contraires respectivement à $attraper(R,O,L)$ et $saisir(R,O,L)$, on ne détaillera
+   pas leur fonctionnement. Il suffit de d\'{e}rouler les sc\'{e}narios dans le sens oppos\'{e} \`{a} ceux d'attraper et saisir.
+   \begin{lstlisting}
+   action( deposer(R,O,L),
+	[position(R) = L, position(O) = L, lieu(O) = main(R)],
+	[lieu(O) = main(R)],
+	[sur(O,table(L)), accessible(O), libre(main(R))] ) :-
+	member(L,[a,b,c]), member(R,[robo1, robo2, robo3]),member(O,[cube1,cube2]).
+   \end{lstlisting}
+   \begin{lstlisting}
+   action( empiler(R,Osur,Osous,L),
+	[position(R) = L, position(Osur) = L, lieu(Osur) = main(R), accessible(Osous)],
+	[lieu(Osur) = main(R), accessible(Osous)],
+	[sur(Osur,Osous), accessible(Osur), libre(main(R))] ) :-
+	member(L,[a,b,c]), member(R,[robo2, robo3]), 
+	member(Osur,[cube1,cube2]), member(Osous,[cube1,cube2]), Osur \= Osous.
+   \end{lstlisting}
    \subsubsection{Tests}
    
   \subsection{TP3 : g\'{e}n\'{e}rateur-d\'{e}monstrateur en logique modale}
+  Au cours de cette s\'{e}ance, il fallait \'{e}crire un programme capable de d\'{e}montrer des th\'{e}or\`{e}mes sur une logique modale.
   
    \subsubsection{R\'{e}solution du probl\`{e}me}
+   Dans un premier temps il fallait d\'{e}finir le fait qu'une proposition P soit satisfaite dans un monde W
    \subsubsection{Tests}
    
   \subsection{TP4 : g\'{e}n\'{e}rateur de plan en logique modale}

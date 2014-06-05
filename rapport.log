@@ -1,17 +1,11 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2012.11.27)  4 JUN 2014 22:24
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.9.11)  5 JUN 2014 13:41
 entering extended mode
  %&-line parsing enabled.
 **rapport.tex
 (./rapport.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
-yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
-ak, danish, dutch, finnish, french, basque, ngerman, german, german-x-2009-06-1
-9, ngerman-x-2009-06-19, ibycus, monogreek, greek, ancientgreek, hungarian, san
-skrit, italian, latin, latvian, lithuanian, mongolian2a, mongolian, bokmal, nyn
-orsk, romanian, irish, coptic, serbian, turkish, welsh, esperanto, uppersorbian
-, estonian, indonesian, interlingua, icelandic, kurmanji, slovenian, polish, po
-rtuguese, spanish, galician, catalan, swedish, ukenglish, pinyin, loaded.
+yphenation, loaded.
 (/usr/share/texmf-texlive/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
 (/usr/share/texmf-texlive/tex/latex/base/size10.clo
@@ -246,7 +240,7 @@ Now handling font encoding U ...
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
 ))
-(/var/lib/texmf/tex/generic/babel/babel.sty
+(/usr/share/texmf-texlive/tex/generic/babel/babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
 
 (/usr/share/texmf-texlive/tex/generic/babel/frenchb.ldf
@@ -257,6 +251,12 @@ File: babel.def 2008/07/06 v3.8l Babel common definitions
 \babel@savecnt=\count87
 \U@D=\dimen103
 )
+
+Package babel Warning: No hyphenation patterns were loaded for
+(babel)                the language `French'
+(babel)                I will use the patterns loaded for \language=0 instead.
+
+\l@french = a dialect from \language0
 Package babel Info: Making : an active character on input line 120.
 Package babel Info: Making ; an active character on input line 121.
 Package babel Info: Making ! an active character on input line 122.
@@ -265,7 +265,6 @@ Package babel Info: Making ? an active character on input line 123.
 \std@mcc=\count88
 \dec@mcc=\count89
 \parindentFFN=\dimen105
-
 *************************************
 * Local config file frenchb.cfg used
 *
@@ -321,8 +320,7 @@ Package ifvtex Info: VTeX not detected.
 \Gm@odd@mp=\dimen110
 \Gm@even@mp=\dimen111
 \Gm@dimlist=\toks17
-
-(/usr/share/texmf-texlive/tex/xelatex/xetexconfig/geometry.cfg))
+)
 (/usr/share/texmf-texlive/tex/latex/listings/listings.sty
 \lst@mode=\count93
 \lst@gtempboxa=\box26
@@ -566,14 +564,20 @@ LaTeX Font Info:    External font `cmex10' loaded for size
  [2]
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 50.
- [3] [4] (./rapport.aux) ) 
+ [3] [4]
+Overfull \hbox (4.58792pt too wide) in paragraph at lines 158--159
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][] 
+ []
+
+[5] (./rapport.aux) ) 
 Here is how much of TeX's memory you used:
- 7018 strings out of 493849
- 96872 string characters out of 1152845
- 206589 words of memory out of 3000000
- 10195 multiletter control sequences out of 15000+50000
+ 7036 strings out of 495062
+ 96931 string characters out of 1182644
+ 208061 words of memory out of 3000000
+ 10118 multiletter control sequences out of 15000+50000
  14905 words of font info for 36 fonts, out of 3000000 for 9000
- 714 hyphenation exceptions out of 8191
+ 28 hyphenation exceptions out of 8191
  38i,6n,40p,252b,1816s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on rapport.dvi (4 pages, 38588 bytes).
+Output written on rapport.dvi (5 pages, 57668 bytes).
