@@ -8,6 +8,8 @@
 :- op(200, fy, <>).
 :- op(200, fy, #).
 
+operateur(O) :- member(O,[et,ou,=>,<=>,-->>,non,<>,#]).
+
 %definir	les propositions
 proposition(P) :- member(P,[p,q,r]).
 
@@ -35,10 +37,10 @@ satisfait(W, P) :-
 %et
 satisfait(W, P et Q) :-
      monde(W),
-     satisfait(P,W),
-     satisfait(Q,W).
+     satisfait(W,P),
+     satisfait(W,Q).
 %non
-satisfait(non P, W) :-
+satisfait(W,non P) :-
      monde(W),
      list_w_satisfait(P, LW),
      not(member(W, LW)).
@@ -86,12 +88,38 @@ rel(W1, W2) :-
 satisfait(W, # P) :-
      satisfait(W,non(<>(non P))).
 
+%generation de plan
+genere(P,0):-
+     proposition(P).
+
+genere(F,M):-
+    M > 0,
+    N is M-1,
+    genere(FBIS,N),
+    operateur(O),
+    proposition(X),
+    (O=(=>) -> F=..[O,X,FBIS],F = X=>FBIS;
+      O=(<=>) -> F=..[O,X,FBIS],F = X<=>FBIS;
+        O=(et) -> F=..[O,X,FBIS], F = X et FBIS;
+	  O=(ou) -> F=..[O,X,FBIS],F = X ou FBIS;
+	    O=(-->>) -> F=..[O,X,FBIS],F = X-->>FBIS;
+	      O=(non) -> F=..[O,X,FBIS],F = non FBIS;
+		O=(<>) -> F=..[O,X,FBIS],F = <> FBIS;
+		  O=(#) -> F=..[O,X,FBIS],F = # FBIS).
 
 %THEOREME : p doit être satisfait dans tous les mondes
 theoreme(P) :-
+     (nonvar(P) ->list_w_satisfait(P, LW),
+                   findall(W,monde(W), ALLW),
+                   egal(LW, ALLW);
+     nl,
+     write(' Profondeur limite : '),
+     read(Prof),
+     nl,
+     genere(P, Prof),
      list_w_satisfait(P, LW),
      findall(W,monde(W), ALLW),
-     egal(LW, ALLW).
+     egal(LW, ALLW)).
 
 egal(LW, ALLW) :-
      inclusion(LW, ALLW),
