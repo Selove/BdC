@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.9.11)  5 JUN 2014 13:41
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.9.11)  6 JUN 2014 15:11
 entering extended mode
  %&-line parsing enabled.
 **rapport.tex
@@ -565,19 +565,92 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <9> on input line 50.
  [3] [4]
-Overfull \hbox (4.58792pt too wide) in paragraph at lines 158--159
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
-][][][][][] 
+Overfull \hbox (36.41139pt too wide) in paragraph at lines 170--172
+\T1/cmr/m/n/10 Les ac-tions $\OML/cmm/m/it/10 deposer\OT1/cmr/m/n/10 (\OML/cmm/
+m/it/10 R; O; L\OT1/cmr/m/n/10 )$ \T1/cmr/m/n/10 et $\OML/cmm/m/it/10 empiler\O
+T1/cmr/m/n/10 (\OML/cmm/m/it/10 R; Osur; Osous; L\OT1/cmr/m/n/10 )$ \T1/cmr/m/n
+/10 sont les ac-tions con-traires re-spec-tive-ment à $\OML/cmm/m/it/10 attrape
+r\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 R; O; L\OT1/cmr/m/n/10 )$
  []
 
-[5] (./rapport.aux) ) 
+[5]
+
+! Package inputenc Error: Unicode char \u8:Ã\lst@FillFixed@ not set up for use 
+with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273    %un des Ã©lÃ©ments 
+                            de la liste satisfait p
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! Package inputenc Error: Keyboard character used is undefined
+(inputenc)                in inputencoding `utf8'.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273    %un des Ã©lÃ©ments 
+                            de la liste satisfait p
+You need to provide a definition with \DeclareInputText 
+or \DeclareInputMath before using this key.
+
+
+! Package inputenc Error: Unicode char \u8:Ã\lst@EC© not set up for use with La
+TeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.273    %un des Ã©lÃ©ments 
+                            de la liste satisfait p
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+[6]
+
+! Package inputenc Error: Unicode char \u8:Ã\lst@FillFixed@ not set up for use 
+with LaTeX.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.318    %THEOREME : p doit Ãªtre 
+                                  satisfait dans tous les mondes
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! Package inputenc Error: Keyboard character used is undefined
+(inputenc)                in inputencoding `utf8'.
+
+See the inputenc package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.318    %THEOREME : p doit Ãªtre 
+                                  satisfait dans tous les mondes
+You need to provide a definition with \DeclareInputText 
+or \DeclareInputMath before using this key.
+
+[7] [8] (./rapport.aux) ) 
 Here is how much of TeX's memory you used:
- 7036 strings out of 495062
- 96931 string characters out of 1182644
- 208061 words of memory out of 3000000
- 10118 multiletter control sequences out of 15000+50000
+ 7062 strings out of 495062
+ 97227 string characters out of 1182644
+ 212061 words of memory out of 3000000
+ 10144 multiletter control sequences out of 15000+50000
  14905 words of font info for 36 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  38i,6n,40p,252b,1816s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on rapport.dvi (5 pages, 57668 bytes).
+Output written on rapport.dvi (8 pages, 94924 bytes).

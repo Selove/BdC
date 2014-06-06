@@ -167,8 +167,8 @@ frame=single,
 	member(L,[a,b,c]), member(R,[robo2, robo3]), 
 	member(O,[cube1,cube2]), member(Osous,[cube1,cube2]), O \= Osous.
    \end{lstlisting}
-   Les actions $deposer(R,O,L)$ et $empiler(R,Osur,Osous,L)$ sont les actions contraires respectivement à $attraper(R,O,L)$ et $saisir(R,O,L)$, on ne détaillera
-   pas leur fonctionnement. Il suffit de d\'{e}rouler les sc\'{e}narios dans le sens oppos\'{e} \`{a} ceux d'attraper et saisir.
+   Les actions $deposer(R,O,L)$ et $empiler(R,Osur,Osous,L)$ sont les actions contraires respectivement à $attraper(R,O,L)$ et $saisir(R,O,L)$, 
+   on ne détaillera pas leur fonctionnement. Il suffit de d\'{e}rouler les sc\'{e}narios dans le sens oppos\'{e} \`{a} ceux d'attraper et saisir.
    \begin{lstlisting}
    action( deposer(R,O,L),
 	[position(R) = L, position(O) = L, lieu(O) = main(R)],
@@ -192,8 +192,152 @@ frame=single,
    \subsubsection{R\'{e}solution du probl\`{e}me}
    Dans un premier temps il fallait d\'{e}finir le fait qu'une proposition \'{e}l\'{e}mentaire P soit satisfaite dans un monde W. D\'{e}j\`{a}, il faut que P soit bien dans 
    la liste des propositions et W dans la liste des mondes, il suffit que P soit une proposition \'{e}l\'{e}mentaire du monde en question,
-   la liste \'{e}tant donn\'{e}e . Cela se d\'{e}finit facilement.
+   la liste \'{e}tant donn\'{e}e . Cela se d\'{e}finit comme suit :
+   \begin{lstlisting}
+   satisfait(W, P) :-
+     proposition(P),
+     monde(W),
+     m(W,L),
+     member(P,L).
+   \end{lstlisting}
+   Mais on ne va pas se limiter \`{a} des formules \'{e}l\'{e}mentaire qui ne contiennent que les propositions list\'{e}es. On veut pouvoir utiliser des op\'{e}rateurs.
+   Pour cela il faut d'abord les d\'{e}finir avant de d\'{e}finir l'op\'{e}ration correspondante.
+   \begin{description}
+    \item[la n\'{e}gation (non) :] c'est un op\'{e}rateur de la forme fy auquel on donnera une priorit\'{e} de 200. Pour que 'non P' soit satisfait dans W,
+    il faut que W ne fasse pas parti des mondes dans lesquels P est satisfait. Il faut donc d\'{e}terminer la liste des mondes dans lesquels P est satisfait.
+       \begin{lstlisting}
+   %operateur
+   :- op(200, fy, non).
+   satisfait(W,non P) :-
+     monde(W),
+     list_w_satisfait(P, LW), 
+     not(member(W, LW)).
+   %liste des mondes qui satisfont P
+   list_w_satisfait(P, LW) :-
+     findall(W,satisfait(W, P), LW).
+       \end{lstlisting}
+    \item[la conjonction (et) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 400. Pour que 'P et Q' soit satisfait dans W,
+    il faut que P soit satisfait dans W et que Q soit satisfait dans W.
+       \begin{lstlisting}
+   %operateur
+   :- op(400, xfy, et).
+   satisfait(W, P et Q) :-
+     monde(W),
+     satisfait(W,P),
+     satisfait(W,Q).
+       \end{lstlisting}
+    \item[la disjonction (ou) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 400. On utilise ici l'\'{e}criture du 'ou'
+    en fonction du 'et et du 'non', en effet 'P ou Q = non(non P et non Q).
+       \begin{lstlisting}
+   %operateur
+   :- op(400, xfy, ou).
+   satisfait(W,P ou Q) :-
+     satisfait(W, non(non P et non Q)).
+       \end{lstlisting}
+    \item[l'implication (=>) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 300. L'implication se d\'{e}fini par 'non P ou Q'.
+       \begin{lstlisting}
+   %operateur
+   :- op(300, xfy, =>).
+   satisfait(W, P => Q) :-
+     satisfait(W, non (P et non Q)).
+       \end{lstlisting}
+    \item[l'\'{e}quivalence (<=>) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 300. L'\'{e}quivalence n'est rien d'autre qu'une implication dans
+    les deux sens.
+       \begin{lstlisting}
+   %operateur
+   :- op(300, xfy, <=>).
+   satisfait(W, P <=> Q) :-
+     satisfait(W, P => Q),
+     satisfait(W, Q => P).
+       \end{lstlisting}
+    \item[l'implication stricte (-->>) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 300. On a une \'{e}quivalence entre
+    'P \-\->> Q' et '\#(P=>Q)', on aura la d\'{e}finition de '\#' un peu plus loin.
+       \begin{lstlisting}
+   %operateur
+   :- op(300, xfy, -->>).
+   satisfait(W, P -->> Q) :-
+     satisfait(W, #(P => Q)).
+       \end{lstlisting}
+    \item[la possibilit\'{e} (<>) :] c'est un op\'{e}rateur de la forme fy auquel on donnera une priorit\'{e} de 200. On dit que P est possible dans W s'il existe
+    un monde W2 en relation avec W tel que W2 satisfait P. Il faut donc trouver tous les mondes en relation avec W et voir si il y en a au moins un qui satisfait P
+       \begin{lstlisting}
+   %operateur
+   :- op(200, fy, <>).
+   satisfait(W, <> P) :-
+     monde(W),
+     un_rel_satisfait(W,P).
+   %une des relations de W satisfait P
+   un_rel_satisfait(W, P) :-
+     bagof(M, rel(W,M), LM),
+     un_satisfait(LM, P).
+   %un des éléments de la liste satisfait p
+   un_satisfait([M | LM], P) :-
+     (satisfait(M,P) -> true; un_satisfait(LM, P)).
+       \end{lstlisting}
+    \item[la n\'{e}cessarit\'{e} (\#) :] c'est un op\'{e}rateur de la forme fy auquel on donnera une priorit\'{e} de 200. Il se d\'{e}finit ais\'{e}ment \`{a} partir
+    de la possibilit\'{e}. En effet '\#P = non(<>(non P))'.
+       \begin{lstlisting}
+   %operateur
+   :- op(200, fy, #).
+   satisfait(W, # P) :-
+     satisfait(W,non(<>(non P))).
+       \end{lstlisting}
+   \end{description}
    
+   On rappelle que le but est d'\'{e}crire un programme capable de nous lister toutes les formules d'une certaine complexit\'{e} qui sont des th\'{e}oremes ou de nous
+   dire si une formule donn\'{e}e est un th\'{e}or\`{e}me.
+   
+   Pour cela, on veut d\'{e}j\`{a} \^{e}tre capable de g\'{e}n\'{e}rer toutes les formules d'une certaine complexit\'{e}. Une formule de complexit\'{e} 0 n'est qu'un
+   proposition et les formules de complexit\'{e} n sont d\'{e}finies r\'{e}cursivement comme une proposition suivie d'un op\'{e}rateur binaire et d'une formule de
+   complexit\'{e} n-1 ou juste comme un op\'{e}rateur unaire suivi d'une formule de complexit\'{e} n-1. Le code est donn\'{e} ci-dessous.
+   \begin{lstlisting}
+   %generation de formules
+    genere(P,0):-
+      proposition(P).
+
+    genere(F,M):-
+      M > 0,
+      N is M-1,
+      genere(FBIS,N),
+      operateur(O),
+      proposition(X),
+      (O=(=>) -> F=..[O,X,FBIS],F = X=>FBIS;
+	O=(<=>) -> F=..[O,X,FBIS],F = X<=>FBIS;
+	  O=(et) -> F=..[O,X,FBIS], F = X et FBIS;
+	    O=(ou) -> F=..[O,X,FBIS],F = X ou FBIS;
+	      O=(-->>) -> F=..[O,X,FBIS],F = X-->>FBIS;
+		O=(non) -> F=..[O,X,FBIS],F = non FBIS;
+		  O=(<>) -> F=..[O,X,FBIS],F = <> FBIS;
+		    O=(#) -> F=..[O,X,FBIS],F = # FBIS).
+   \end{lstlisting}
+   Enfin, il faut \'{e}crire 'theoreme(P)', si P est une variable, on demande la complexit\'{e} des formules \`{a} g\'{e}n\'{e}rer et on les g\'{e}r\`{e}re
+   avant de renvoyer celles qui sont des th\'{e}or\`{e}mes, sinon on v\'{e}rifie juste si P est un th\'{e}oreme. P est un th\'{e}or\`{e}me si il est vrai
+   dans tout les mondes existant, pour arriver \`{a} cela, on r\'{e}cup\`{e}re la liste des mondes, celle des mondes dans lesquels P est vrai et on v\'{e}rifie
+   qu'ils sont \'{e}gaux.
+   \begin{lstlisting}
+   %THEOREME : p doit être satisfait dans tous les mondes
+   theoreme(P) :-
+	(nonvar(P) ->theoreme_aux(P);
+	nl,
+	write(' complexite : '),
+	read(C),
+	nl,
+	genere(P, C),
+	theoreme_aux(P)).
+
+   theoreme_aux(P) :-
+	list_w_satisfait(P, LW),
+	findall(W,monde(W), ALLW),
+	egal(LW, ALLW)
+   %l'egalite est une double inclusion
+   egal(LW, ALLW) :-
+	inclusion(LW, ALLW),
+	inclusion(ALLW, LW).
+
+   %inclusion(C,E) est l inclusion de C dans E
+   inclusion([], _). %la liste vide est toujours incluse
+   inclusion([W|LW], L) :- member(W,L), inclusion(LW,L).
+   \end{lstlisting}
    \subsubsection{Tests}
    
   \subsection{TP4 : g\'{e}n\'{e}rateur de plan en logique modale}
