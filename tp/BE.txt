@@ -312,5 +312,34 @@ C.
 	Lm{E7} = Lm{Vrai, p, ~p} car <Faux> et [Faux] sont neutres
 	       = Lm{E2} Union Sigma4  par le même raisonnement que précédemment
 	      
+
+	10. Lm{E10} = Lm{E9}
+	8.E8 = {p, q}
+	Lm{p} Union Lm{q} \inclus Lm{E8}
+
+	On a :
+	<p><q> == <q><p> et est idempotent (car le 'ou' est commutatif et 'X ou X == X')
+	[p][q] == [q][p] et est idempotent (car le 'et' est commutatif et '~X et ~X == X')
+	avec :
+	|= <p><q>X ssi |= p ou q ou X
+
+	|= [p][q]X ssi |= ~p et ~q et X
+
+
 	
+	|= ~<p><q>X ssi |= ~p et ~q et ~X
+
+	|= ~[p][q]X ssi |= p ou q ou ~X
+
+	
+	p et q jouent des rôles symétriques.
+	|= <p>[q]X ssi |= p ou (~q et X) |= (p ou ~q) et (p ou X)
+
+	|= ~<p>[q]X ssi |= ~p et (q ou ~X) |= (~p et q) ou (~p et ~X)
+
+
+	
+	|= [p]<q>X ssi |= ~p et (q ou ~X) |= (~p et q) ou (~p et ~X)  donc [p]<q> == ~<p>[q]
+	
+
 	
