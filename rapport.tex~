@@ -251,7 +251,7 @@ frame=single,
      satisfait(W, Q => P).
        \end{lstlisting}
     \item[l'implication stricte (-->>) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 300. On a une \'{e}quivalence entre
-    'P \-\->> Q' et '\#(P=>Q)', on aura la d\'{e}finition de '#' un peu plus loin.
+    'P \-\->> Q' et '\#(P=>Q)', on aura la d\'{e}finition de '\#' un peu plus loin.
        \begin{lstlisting}
    %operateur
    :- op(300, xfy, -->>).
@@ -341,9 +341,61 @@ frame=single,
    \subsubsection{Tests}
    
   \subsection{TP4 : g\'{e}n\'{e}rateur de plan en logique modale}
-  
-   \subsubsection{R\'{e}solution du probl\`{e}me}
-   \subsubsection{Tests}
+  Concernant le TP4, nous n'avons fait que la premi\`{e}re question. Il fallait implanter un g\'{e}n\'{e}rateur de plan en logique modale.
+  Le probl\`{e}me \`{a} r\'{e}soudre \'{e}tant :
+   \begin{lstlisting}
+   ?- est(w0,[p1, ... , pk]), satisfait(<<< Plan >>> (F1 ^ ... ^ Fn), w0).
+   \end{lstlisting}
+  Nous supposons l'ensemble des mondes connus. Il nous faut trois nouveaux operateurs '<<', '>>' et '::'. Ils sont d\'{e}fini ci-apr\`{e}s.
+   \begin{lstlisting}
+   %<< a :: b :: c >> (P et Q)
+   :- op(100, fy, <<).
+   :- op(150, xfy, <<).
+   :- op(100, xfy, ::).
+   \end{lstlisting}
+  Il nous faut donc d\'{e}finir ce que c'est que de satisfaire '<<A>>F' dans le monde W. Ici, soit A est une suite d'actions, soit A est une seule action. Soit X la première action de A
+  (si A est une suite) ou A lui-m\^{e}me (si A est une action). Il faut que les conditions de X soient v\'{e}rifi\'{e}es dans le monde de d\'{e}part W $est\_entrepeunable(A, W)$,
+  il faut ensuite trouver un monde W2 dans lequel les effets de A sont effectifs $est\_effective(A, W)$. Enfin, si A est une action, il faut que F soit satisfait
+  dans W2, sinon si A est une suite d'actions 'X::ABIS', il faut que '<<ABIS>>F soit satisfait dans W2. Le code est donn\'{e} ci-dessous.
+  \begin{lstlisting}
+   satisfait(W, << A >> F) :-
+	monde(W),
+	rel(W, W2), % \E un monde W2
+        operateur_act(O),
+        (O=(::) -> A=..[O,X,ABIS], %si on a une suite d'actions
+                   A = X::ABIS, 
+                   est_entrepenable(X, W),
+	           est_effective(X, W2),
+                   satisfait(W2, <<ABIS>> F);
+         est_entrepenable(A, W), %si A est une action
+	 est_effective(A, W2),
+	 satisfait(W2, F)). % F est satisfait dans W2
+   \end{lstlisting}
+   Il faut donc d\'{e}finir est\_entrepenable et est\_effective. $est\_entrepeunable(A, W)$ permet de v\'{e}rifier que les conditions de A sont satisfaites dans W,
+   pour cela, il faut r\'{e}cup\'{e}rer la liste des conditions, la convertir en conjonction de ses diff\'{e}rents \'{e}l\'{e}ments avant de voir si cette conjonction
+   est satisfaite dans W. Pour $est\_effective(A, W)$, c'est le m\^{e}me principe mais on prend la n\'{e}gation de la conjonction des effets.
+    \begin{lstlisting}
+  % les conditions de A sont satisfaites dans W
+  est_entrepeunable(A, W) :-
+	  monde(W),
+	  action(A, Cond, Suppr, Ajout),
+	  list2conj(Cond, P),
+	  satisfait(W, P).
+
+  % les effets de A sont effectifs dans W
+  est_effective(A, W) :-
+	  monde(W),
+	  action(A, Cond, Suppr, Ajout),
+	  list2conj(Suppr, SU),
+	  list2conj(Ajout, AJ),
+	  satisfait(W, non (SU)),
+	  satisfait(W, AJ).
+
+  %transforme une liste en conjonction des éléments de la liste
+  list2conj([A], A).
+  list2conj([A|LA], A et LC) :-
+         list2conj(LA, LC)
+   \end{lstlisting}
    
    
  \section{Travaux r\'{e}alis\'{e}s lors du bureau d'\'{e}tude}

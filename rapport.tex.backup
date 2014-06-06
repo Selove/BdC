@@ -251,7 +251,7 @@ frame=single,
      satisfait(W, Q => P).
        \end{lstlisting}
     \item[l'implication stricte (-->>) :] c'est un op\'{e}rateur de la forme xfy auquel on donnera une priorit\'{e} de 300. On a une \'{e}quivalence entre
-    'P -->> Q' et '#(P=>Q)', on aura la d\'{e}finition de '#' un peu plus loin.
+    'P \-\->> Q' et '\#(P=>Q)', on aura la d\'{e}finition de '\#' un peu plus loin.
        \begin{lstlisting}
    %operateur
    :- op(300, xfy, -->>).
@@ -266,16 +266,16 @@ frame=single,
    satisfait(W, <> P) :-
      monde(W),
      un_rel_satisfait(W,P).
-%une des relations de W satisfait P
-un_rel_satisfait(W, P) :-
+   %une des relations de W satisfait P
+   un_rel_satisfait(W, P) :-
      bagof(M, rel(W,M), LM),
      un_satisfait(LM, P).
-%un des éléments de la liste satisfait p
-un_satisfait([M | LM], P) :-
+   %un des éléments de la liste satisfait p
+   un_satisfait([M | LM], P) :-
      (satisfait(M,P) -> true; un_satisfait(LM, P)).
        \end{lstlisting}
-    \item[la n\'{e}cessarit\'{e} (#) :] c'est un op\'{e}rateur de la forme fy auquel on donnera une priorit\'{e} de 200. Il se d\'{e}finit ais\'{e}ment \`{a} partir
-    de la possibilit\'{e}. En effet '#P = non(<>(non P))'.
+    \item[la n\'{e}cessarit\'{e} (\#) :] c'est un op\'{e}rateur de la forme fy auquel on donnera une priorit\'{e} de 200. Il se d\'{e}finit ais\'{e}ment \`{a} partir
+    de la possibilit\'{e}. En effet '\#P = non(<>(non P))'.
        \begin{lstlisting}
    %operateur
    :- op(200, fy, #).
@@ -310,13 +310,84 @@ un_satisfait([M | LM], P) :-
 		  O=(<>) -> F=..[O,X,FBIS],F = <> FBIS;
 		    O=(#) -> F=..[O,X,FBIS],F = # FBIS).
    \end{lstlisting}
-   
+   Enfin, il faut \'{e}crire 'theoreme(P)', si P est une variable, on demande la complexit\'{e} des formules \`{a} g\'{e}n\'{e}rer et on les g\'{e}r\`{e}re
+   avant de renvoyer celles qui sont des th\'{e}or\`{e}mes, sinon on v\'{e}rifie juste si P est un th\'{e}oreme. P est un th\'{e}or\`{e}me si il est vrai
+   dans tout les mondes existant, pour arriver \`{a} cela, on r\'{e}cup\`{e}re la liste des mondes, celle des mondes dans lesquels P est vrai et on v\'{e}rifie
+   qu'ils sont \'{e}gaux.
+   \begin{lstlisting}
+   %THEOREME : p doit être satisfait dans tous les mondes
+   theoreme(P) :-
+	(nonvar(P) ->theoreme_aux(P);
+	nl,
+	write(' complexite : '),
+	read(C),
+	nl,
+	genere(P, C),
+	theoreme_aux(P)).
+
+   theoreme_aux(P) :-
+	list_w_satisfait(P, LW),
+	findall(W,monde(W), ALLW),
+	egal(LW, ALLW)
+   %l'egalite est une double inclusion
+   egal(LW, ALLW) :-
+	inclusion(LW, ALLW),
+	inclusion(ALLW, LW).
+
+   %inclusion(C,E) est l inclusion de C dans E
+   inclusion([], _). %la liste vide est toujours incluse
+   inclusion([W|LW], L) :- member(W,L), inclusion(LW,L).
+   \end{lstlisting}
    \subsubsection{Tests}
    
   \subsection{TP4 : g\'{e}n\'{e}rateur de plan en logique modale}
-  
-   \subsubsection{R\'{e}solution du probl\`{e}me}
-   \subsubsection{Tests}
+  Concernant le TP4, nous n'avons fait que la premi\`{e}re question. Il fallait implanter un g\'{e}n\'{e}rateur de plan en logique modale.
+  Le probl\`{e}me \`{a} r\'{e}soudre \'{e}tant :
+   \begin{lstlisting}
+   ?- est(w0,[p1, ... , pk]), satisfait(<<< Plan >>> (F1 ^ ... ^ Fn), w0).
+   \end{lstlisting}
+  Nous supposons l'ensemble des mondes connus. Il nous faut trois nouveaux operateurs '<<', '>>' et '::'. Ils sont d\'{e}fini ci-apr\`{e}s.
+   \begin{lstlisting}
+   %<< a :: b :: c >> (P et Q)
+   :- op(100, fy, <<).
+   :- op(150, xfy, <<).
+   :- op(100, xfy, ::).
+   \end{lstlisting}
+  Il nous faut donc d\'{e}finir ce que c'est que de satisfaire '<<A>>F' dans le monde W. Ici, soit A est une suite d'actions, soit A est une seule action. Soit X la première action de A
+  (si A est une suite) ou A lui-m\^{e}me (si A est une action). Il faut que les conditions de X soient v\'{e}rifi\'{e}es dans le monde de d\'{e}part W $est\_entrepeunable(A, W)$,
+  il faut ensuite trouver un monde W2 dans lequel les effets de A sont effectifs $est\_effective(A, W)$. Enfin, si A est une action, il faut que F soit satisfait
+  dans W2, sinon si A est une suite d'actions 'X::ABIS', il faut que '<<ABIS>>F soit satisfait dans W2. Le code est donn\'{e} ci-dessous.
+  \begin{lstlisting}
+   satisfait(W, << A >> F) :-
+	monde(W),
+	rel(W, W2), % \E un monde W2
+        operateur_act(O),
+        (O=(::) -> A=..[O,X,ABIS], %si on a une suite d'actions
+                   A = X::ABIS, 
+                   est_entrepenable(X, W),
+	           est_effective(X, W2),
+                   satisfait(W2, <<ABIS>> F);
+         est_entrepenable(A, W), %si A est une action
+	 est_effective(A, W2),
+	 satisfait(W2, F)). % F est satisfait dans W2
+   \end{lstlisting}
+   Il faut donc d\'{e}finir est\_entrepenable et est\_effective. $est\_entrepeunable(A, W)$ permet de v\'{e}rifier que les conditions de A sont satisfaites dans W,
+   pour cela, il faut r\'{e}cup\'{e}rer la liste des conditions, la convertir en conjonction de ses diff\'{e}rents \'{e}l\'{e}ments avant de voir si cette conjonction
+   est satisfaite dans W. Pour $est\_effective(A, W)$, c'est le m\^{e}me principe mais on prend la n\'{e}gation de la conjonction des effets.
+    \begin{lstlisting}
+   satisfait(W, << A >> F) :-
+	monde(W),
+	rel(W, W2), % \E un monde W2
+        operateur_act(O),
+        (O=(::) -> A=..[O,X,ABIS], %si on a une suite d'actions
+                   A = X::ABIS, 
+                   est_entrepenable(X, W),
+	           est_effective(X, W2),
+                   satisfait(W2, <<ABIS>> F);
+         est_entrepenable(A, W), %si A est une action
+	 est_effective(A, W2),
+	 satisfait(W2, F)). % F est satisfait dans W2
+   \end{lstlisting}
    
    
  \section{Travaux r\'{e}alis\'{e}s lors du bureau d'\'{e}tude}
