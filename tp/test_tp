@@ -1,0 +1,50 @@
+================= TP1 =============
+?- planifier(P5, Temps).
+
+ Profondeur limite : 5.
+
+P5 = [aller(robot, a, b), prendre(robot, boite), aller(robot, b, a), poser(robot, boite), aller(robot, a, b)] .
+Temps = 0.03 s
+
+(Pour n<5, aucun plan n'est trouvé.
+Pour n>=5, on trouve P5)
+
+================ TP2 =============
+?- planifier(P, T).
+
+ Profondeur limite : 11.
+
+false.
+
+(robo2 inverse la pile sur la table b)
+?- planifierInverser(P,T).
+
+ Profondeur limite : 4.
+
+P = [saisir(robo2, cube1, b), deposer(robo2, cube1, b), attraper(robo2, cube2, b), empiler(robo2, cube2, cube1, b)],
+T = 0.01 s
+
+
+(robo2 et robo1 collaborent pour déposer les 2 cubes sur la table b)
+?- planifierDeplacer(P,T).
+
+ Profondeur limite : 10.
+
+P = [saisir(robo2, cube1, b), attraper(robo1, cube2, b), transporter(robo1, b, c, cube2), deposer(robo2, cube1, b), deposer(robo1, cube2, c), aller_a_vide(robo1, c, b), attraper(robo1, cube1, b), transporter(robo1, b, c, cube1), deposer(..., ..., ...)],
+T = 114.81 s
+
+?- planifierDeplacer(P,T).
+
+ Profondeur limite : 9.
+
+P = [saisir(robo2, cube1, b), attraper(robo1, cube2, b), transporter(robo1, b, c, cube2), deposer(robo2, cube1, b), deposer(robo1, cube2, c), aller_a_vide(robo1, c, b), attraper(robo1, cube1, b), transporter(robo1, b, c, cube1), deposer(..., ..., ...)],
+T = 149.2 
+
+
+(les 2 cubes sont a meme la table b, robo1 les déplace vers la table c)
+?- planifierDeplacer(P, T, EF).
+
+ Profondeur limite : 7.
+
+P = [attraper(robo1, cube1, b), transporter(robo1, b, c, cube1), deposer(robo1, cube1, c), aller_a_vide(robo1, c, b), attraper(robo1, cube2, b), transporter(robo1, b, c, cube2), deposer(robo1, cube2, c)],
+T = 43.43,
