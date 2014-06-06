@@ -10,11 +10,15 @@ Temps = 0.03 s
 Pour n>=5, on trouve P5)
 
 ================ TP2 =============
-?- planifier(P, T).
+?- planifier(P,T,F).
 
  Profondeur limite : 11.
 
-false.
+P = [saisir(robo2, cube1, b), attraper(robo1, cube2, b), transporter(robo1, b, c, cube2), deposer(robo2, cube1, b), deposer(robo1, cube2, c), aller_a_vide(robo1, c, b), attraper(robo1, cube1, b), transporter(robo1, b, c, cube1), deposer(..., ..., ...)|...],
+T = 1055.22,
+F = [sur(cube1, cube2), accessible(cube1), libre(main(robo3)), libre(main(robo1)), position(robo1)=c, position(cube1)=c, sur(cube2, table(c)), libre(main(...)), ... = ...|...] .
+
+
 
 (robo2 inverse la pile sur la table b)
 ?- planifierInverser(P,T).
