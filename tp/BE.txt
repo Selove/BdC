@@ -138,7 +138,7 @@ B.
 	6.
 	S4 = { espilon, [], <>, []<>, <>[], []<>[], <>[]<>} Union { ~, ~[], ~<>, ~[]<>, ~<>[], ~[]<>[], ~<>[]<>}
 	Sigma4 a aussi 14 modalités distinctes :
-	Sigma4 = { espilon, <~p>, <p>, [~p], [p] } Union { ~, ~<~p>, ~<p>, ~[~p], ~[p] }
+	Sigma4 = { espilon, <~p>, <p>, [~p], [p], <p>[~p], <~p>[p] } Union { ~, ~<~p>, ~<p>, ~[~p], ~[p], ~<p>[~p], ~<~p>[p] }
 	On a comme règles:
 	\A X \in F
 	|= epsilon X ssi |= X
@@ -161,9 +161,24 @@ B.
 
 	|= ~[~p]X ssi |= ~p ou ~X
 
+	|= <p>[~p]X ssi |= p ou (p et X)
+
+	|= ~<p>[~p]X ssi |= ~p et (~p ou ~X)
+
+	|= <~p>[p]X ssi |= ~p ou (~p et X)
+	
+	|= ~<~p>[p]X ssi |= p et (p ou ~X)
+	
+
 	On a de plus les propriétés suivantes :
 	
-	1) \A n >= 0, (<p><~p>)^n == (<~p><p>)^n == espilon
+	1) 
+	\A X,
+	(<p><~p>)X |= p ou ~p ou X |= Vrai ou X |= X 
+	donc (<p><~p>) == (<~p><p>) == espilon
+	Plus generalement,
+	Pour toute modalité Mod, 
+	\A n >= 0, (<p><~p>)Mod== (<~p><p>)Mod == Mod
 
 	2) 
 	\A X
@@ -175,7 +190,10 @@ B.
 
 	D'où, 
 	2-a) <p>[p][~p] X |=  p ou [p][~p]X |= p ou Faux |= p
-	2-b) ~<p>[p][~p] X |=  ~p
+	2-b) ~<p>[p][~p] X |=  ~p  
+	avec ~<p>[p][~p] == <~p>[p][~p]
+
+	On vérifie que toute autre combinaison de 3 revient à une modalité précitée.
 
 	
 C.
@@ -263,24 +281,36 @@ C.
 
 	3. E3 = {Faux; Vrai}
 	Lm{E3} correspond à Sigma4 avec p=Vrai d'où
-	Lm{E3} = { espilon, <Faux>, <Vrai>, [Faux], [Vrai] } Union { ~, ~<Faux>, ~<Vrai>, ~[Faux], ~[Vrai] }
-	       = Lm{E2} Union Lm{E3}
-	       = Lm{E2} car Lm{E3} \inclus Lm{E2}
+	Lm{E3} = { espilon, <Faux>, <Vrai>, [Faux], [Vrai], <Vrai>[Faux], <Faux>[Vrai] } Union { ~, ~<Faux>, ~<Vrai>, ~[Faux], ~[Vrai], <Vrai>[Faux], <Faux>[Vrai] }
+	or <Faux> == [Faux] == espilon
+	d'où,
+	Lm{E3} = { espilon, <Vrai>,  [Vrai]} Union { ~, ~<Vrai>, ~[Vrai] = Lm{E2}
 	
-
-	8.E8 = {p, q}
-
-	On a :
-	<p><q> == <q><p> et idempotent (car le 'ou' est commutatif et 'X ou X == X')
-	[p][q] == [q][p] et idempotent (car le 'et' est commutatif et '~X et ~X == X')
 
 	4. E4 = {Faux, p}
 	On sait que <Faux> == [Faux] == espilon
-	donc Lm{E4} == Sigma4 et Lm{E6} = Lm{E5}
+	donc Lm{E4} == Sigma4, Lm{E6} = Lm{E5}.
 
 	5. E5 = {Vrai, p}
+	On a,
+	Pour toute modalité Mod,
+	|= <Vrai>ModX ssi |= Vrai 
+
+	|= ~<Vrai>ModX ssi |= Faux
+
+	|= Mod<Vrai>X ssi |= Mod(Vrai)
+
+	|= Mod~<Vrai>X ssi |= Mod(Faux)
+	
+	et [Vrai] == ~<Vrai> et ~[Vrai] == <Vrai>
+	
+	Ainsi Lm{E5} se réduit à Lm{E2} Union Sigma5
+	Soit Lm{E5} =  {epsilon, <Vrai>, <p>, [p]} Union {~, ~<Vrai>, ~<p>, ~[p]}
 
 
-
+	7. E7 = {Faux, Vrai, p, ~p}
+	Lm{E7} = Lm{Vrai, p, ~p} car <Faux> et [Faux] sont neutres
+	       = Lm{E2} Union Sigma4  par le même raisonnement que précédemment
+	      
 	
 	

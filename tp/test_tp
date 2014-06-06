@@ -19,7 +19,6 @@ T = 1055.22,
 F = [sur(cube1, cube2), accessible(cube1), libre(main(robo3)), libre(main(robo1)), position(robo1)=c, position(cube1)=c, sur(cube2, table(c)), libre(main(...)), ... = ...|...] .
 
 
-
 (robo2 inverse la pile sur la table b)
 ?- planifierInverser(P,T).
 
