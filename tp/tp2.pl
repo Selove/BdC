@@ -18,15 +18,24 @@ init2(EI) :- EI = [position(robo1) = b, position(robo3) = c, position(robo2) = b
 		libre(main(robo1)), libre(main(robo2)), libre(main(robo3)), 
 		sur(cube1,table(c)), sur(cube2,table(b))].
 
-initInv(EI) :- EI = [position(robo1) = b, position(robo2) = b, 
+initInv(EI) :- EI = [position(robo2) = b, 
 		position(cube1) = b, position(cube2) = b, 
 		accessible(cube1), 
-		libre(main(robo1)), libre(main(robo2)),
+		libre(main(robo2)), 
 		sur(cube1,cube2), sur(cube2,table(b))].
+init2Dep(EI) :- EI = [position(robo1) = b, position(robo2) = b,
+		position(cube1) = b, position(cube2) = b, 
+		accessible(cube1), 
+		libre(main(robo2)), libre(main(robo1)),
+		sur(cube1,cube2), sur(cube2,table(b))].
+initDepl(EI) :- EI = [position(robo1) = b,
+		position(cube1) = b, position(cube2) = b, 
+		accessible(cube1), accessible(cube2), 
+		libre(main(robo1)),
+		sur(cube1,table(b)), sur(cube2,table(b))].
 %buts
 	%cube1 sur cube2 sur table c et robo1 en c 
 but(BUT):- BUT = [position(robo1) = c, position(cube1) = c, position(cube2) = c, 
-		position(robo2) = b, position(robot3)= c,
 		accessible(cube1), 
 		sur(cube1,cube2), sur(cube2,table(c))].
 	%cube2 sur cube1 sur table b 
@@ -41,11 +50,22 @@ but2(BUT) :- BUT = [position(robo1) = c, position(robo3) = c, position(robo2) = 
 		accessible(cube1), 
 		libre(main(robo1)), libre(main(robo2)), libre(main(robo3)), 
 		sur(cube1,cube2), sur(cube2,table(c))].
-butInv(B) :- EI = [position(robo1) = b, position(robo2) = b, 
+butInv(BUT) :- BUT = [position(robo2) = b, 
 		position(cube1) = b, position(cube2) = b, 
 		accessible(cube2), 
-		libre(main(robo1)), libre(main(robo2)),
+		libre(main(robo2)),
 		sur(cube2,cube1), sur(cube1,table(b))].
+but2Dep(BUT) :- BUT = [position(robo2) = b, position(robo1) = c,
+		position(cube1) = c, position(cube2) = c, 
+		accessible(cube2), accessible(cube1),
+		libre(main(robo2)), libre(main(robo1)),
+		sur(cube1,table(c)), sur(cube2,table(c))].
+butDepl(BUT) :- BUT = [position(robo1) = c,
+		position(cube1) = c, position(cube2) = c, 
+		accessible(cube2), accessible(cube1),
+		libre(main(robo1)),
+		sur(cube1,table(c)), sur(cube2,table(c))].
+
 %actions
 action( aller_a_vide(R,Ld,La),
 	[position(R) = Ld, libre(main(R))],
@@ -105,7 +125,7 @@ genere(EI,EF,[ACT|PLAN],M):-
     M > 1, transition(ACT,EI,E), N is M-1, between(1,N,P), genere(E,EF,PLAN,P).
 
 %planification pour le cas du TP
-planifier(Plan, Temps) :-
+planifier(Plan, Temps, F) :-
     init(E),
     but(B),
     nl,
@@ -117,10 +137,36 @@ planifier(Plan, Temps) :-
     cputime(Temps).
 
 %planification parametree
-%inverser la pile en restant sur la meme table avec uniquement robo1 et robo2
+%inverser la pile en restant sur la meme table avec uniquement robo2
 planifierInverser(Plan, Temps) :-
     initInv(E),
     butInv(B),
+    nl,
+    write(' Profondeur limite : '),
+    read(Prof),
+    nl,
+    genere(E,F,Plan,Prof),
+    verifcond(B,F),
+    cputime(Temps).
+
+%planification parametree
+%dépiler les 2 cubes puis les deplacer de la table b vers la table c avec robo2 et robo1
+planifier2Dep(Plan, Temps, F) :-
+    init2Dep(E),
+    but2Dep(B),
+    nl,
+    write(' Profondeur limite : '),
+    read(Prof),
+    nl,
+    genere(E,F,Plan,Prof),
+    verifcond(B,F),
+    cputime(Temps).
+
+%planification parametree
+%deplacer les 2 cubes de la table b vers la table c avec robo2 et robo1, les 2 cubes, etant au debut et a la fin a meme la table 
+planifierDeplacer(Plan, Temps, F) :-
+    initDepl(E),
+    butDepl(B),
     nl,
     write(' Profondeur limite : '),
     read(Prof),

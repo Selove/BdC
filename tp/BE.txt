@@ -164,21 +164,27 @@ B.
 	On a de plus les propriétés suivantes :
 	
 	1) \A n >= 0, (<p><~p>)^n == (<~p><p>)^n == espilon
-	
-	2) Pour toute modalité Mod, 
+
+	2) 
 	\A X
-	\A n>=0, ([p][~p])^n(Mod X) == ([~p][p])^n(Mod X) |= Faux
+	[p][~p]X |= ~p et (p et X) |= Faux et X |= Faux	
+	Plus generalement,
+	Pour toute modalité Mod, 
+	\A X
+	([p][~p])(Mod X) == ([~p][p])(Mod X) |= Faux 
 
 	D'où, 
-	2-a) <p>[p][~p] X |=  p
-	2-b) ~<p>[p][~p] X |=  p
+	2-a) <p>[p][~p] X |=  p ou [p][~p]X |= p ou Faux |= p
+	2-b) ~<p>[p][~p] X |=  ~p
 
 	
 C.
 
-	1- E1
-	Sigma5.1 = {epsilon, <Faux>, [Faux]} Union {~, ~<Faux>, ~[Faux]}.
+	1- E1 = {Faux}
+	Lm{E1} correspond à Sigma5 avec p = Faux d'où
+	Lm{E1} = {epsilon, <Faux>, [Faux]} Union {~, ~<Faux>, ~[Faux]}.
 	
+	*** Modalités
 	On a comme règles:
 	\A X \in F
 	|= epsilon X ssi |= X
@@ -193,15 +199,16 @@ C.
 
 	|= ~[Faux]X ssi |= Faux ou ~X |= ~X (négation)
 	
-	Ainsi Sigma5.1 se réduit à {epsilon, ~} soit 2 modalités distintes définies par 
+	Ainsi Lm{E1} se réduit à {epsilon, ~} soit 2 modalités distintes définies par 
 	\A X \in F
 	|= epsilon X ssi |= X
 
 	|= ~X ssi |= ~X
 
-	
-	Sigma5.1 vérifie donc KT4 tout comme Sigma5
-	De plus
+	*** Propriétés caractéristiques
+	Lm{E1} vérifie donc KT4 tout comme Sigma5
+	De plus,
+
 	(B): P => [p]<p>P 
 	<=> ~P ou ~p
 	<=> ~P ou Vrai (dans E1 car p = Faux)
@@ -215,26 +222,14 @@ C.
 	<=> Vrai
 	Sigma5.1 verifie donc E
 	
-	Ainsi Sigma5.1 vérifie donc KT4BE comme S5
+	Ainsi Lm{E1} vérifie donc KT4BE comme S5
 
 	
-	Sigma4.1 = { espilon, <~Faux>} Union { ~, ~<~Faux> } soit 4 propriétés distinctes définies par :
-	\A X \in F
-	|= epsilon X ssi |= X
-
-	|= <~Faux>X ssi |= <Vrai>X  |= Vrai ou X |= Vrai (même si X vaut Faux donc)
-
-	|= ~X ssi |= ~X
+	2- E2 = {Vrai}
+	Lm{E2} correspond à Sigma5 avec p = Vrai d'où
+	Lm{E2} = {epsilon, <Vrai>, [Vrai]} Union {~, ~<Vrai>, ~[Vrai]}
 	
-	|= ~<~Faux>X ssi |= ~<Vrai>X |= Faux et ~X |= Faux (même si X vaut Vrai donc)
-	
-	Sigma4.1 vérifie donc KT4 tout comme Sigma4
-
-
-
-	2- E2
-	Sigma5.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>} soit 4 modalités distinctes
-	
+	*** Modalités
 	On a comme règles:
 	\A X \in F
 	|= epsilon X ssi |= X
@@ -244,35 +239,48 @@ C.
 	|= ~X ssi |= ~X
 	
 	|= ~<Vrai>X ssi |= Faux et ~X |= Faux
-
 	
-	Sigma5.2 vérifie donc KT4 tout comme Sigma5
+	|= [Vrai]X ssi |= Faux et X |= Faux  d'où [Vrai] == ~<Vrai> et ~[Vrai] == <Vrai>
+
+	On a donc Lm{E2} = {epsilon, <Vrai>} Union {~, ~<Vrai>} soit 4 modalités distinctes
+	*** Propriétés caractéristiques
+	Lm{E2} vérifie donc KT4 tout comme Sigma5
 	De plus
 	(B): P => [p]<p>P 
 	<=> ~P ou ~p
 	<=> ~P ou Faux (dans E2 car p = Vrai)
 	<=> ~P
-	Pas nécessairement vrai donc Sigma5.2 ne vérifie pas B
+	Pas nécessairement vrai donc Lm{E2} ne vérifie pas B
 
 	(E): <p>P => [p]<p>P
 	<=> (~p et ~P) ou (~p et P)
 	<=> (Faux et ~P) ou (Faux et P)   (dans E1 car p = Faux)
         <=> Faux
-	Sigma5.2 ne verifie donc pas E
+	Lm{E2} ne verifie donc pas E
 	
-	Ainsi Sigma5.2 vérifie KT4 comme Sigma5
+	C/C : Ainsi Lm{E2} vérifie KT4 comme Sigma5
+
+
+	3. E3 = {Faux; Vrai}
+	Lm{E3} correspond à Sigma4 avec p=Vrai d'où
+	Lm{E3} = { espilon, <Faux>, <Vrai>, [Faux], [Vrai] } Union { ~, ~<Faux>, ~<Vrai>, ~[Faux], ~[Vrai] }
+	       = Lm{E2} Union Lm{E3}
+	       = Lm{E2} car Lm{E3} \inclus Lm{E2}
+	
+
+	8.E8 = {p, q}
+
+	On a :
+	<p><q> == <q><p> et idempotent (car le 'ou' est commutatif et 'X ou X == X')
+	[p][q] == [q][p] et idempotent (car le 'et' est commutatif et '~X et ~X == X')
+
+	4. E4 = {Faux, p}
+	On sait que <Faux> == [Faux] == espilon
+	donc Lm{E4} == Sigma4 et Lm{E6} = Lm{E5}
+
+	5. E5 = {Vrai, p}
+
+
 
 	
-	Sigma4.2 = Sigma5.2 
-	car <~Vrai> == [~Vrai] == espilon
-	Sigma4.2 vérifie donc KT4 tout comme Sigma4
-
-
-
-	3. E3
-	Sigma5.3 correspond à Sigma4 avec p=Vrai
-	donc, 
-	Sigma5.3 == Sigma4.2 = {epsilon, <Vrai>} Union {~, ~<Vrai>}
-	
-	Sigma5.3 vérifie donc KT4
 	
